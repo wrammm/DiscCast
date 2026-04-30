@@ -17,7 +17,7 @@ export class ForecastPage {
   private readonly scoreService = inject(DiscGolfScore);
   private readonly settingsService = inject(Settings);
 
-  readonly locationQuery = signal('Omaha, NE');
+  readonly locationQuery = signal('Omaha');
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
   readonly score = signal<DiscGolfScoreBreakdown | null>(null);
@@ -39,17 +39,17 @@ export class ForecastPage {
       next: ({ location, forecast }) => {
         const score = this.scoreService.scoreCurrentConditions(
           forecast,
-          this.settingsService.settings()
+          this.settingsService.settings(),
         );
 
         this.locationName.set(
-          [location.name, location.admin1, location.country].filter(Boolean).join(', ')
+          [location.name, location.admin1, location.country].filter(Boolean).join(', '),
         );
 
         this.score.set(score);
         this.loading.set(false);
       },
-      error: err => {
+      error: (err) => {
         this.error.set(err?.message ?? 'Unable to load weather.');
         this.loading.set(false);
       },
