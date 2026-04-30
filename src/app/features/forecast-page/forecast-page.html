@@ -1,0 +1,71 @@
+<section class="page">
+  <div class="hero">
+    <h1>Disc Golf Weather Score</h1>
+    <p>Check wind, rain, mud risk, temperature, humidity, visibility, and overall playability.</p>
+
+    <div class="search-row">
+      <input
+        [ngModel]="locationQuery()"
+        (ngModelChange)="locationQuery.set($event)"
+        placeholder="Enter city, state, or ZIP"
+        (keyup.enter)="search()"
+      />
+
+      <button type="button" (click)="search()" [disabled]="loading()">
+        {{ loading() ? 'Checking...' : 'Check Weather' }}
+      </button>
+    </div>
+
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </div>
+
+  @if (score(); as result) {
+    <article class="score-card">
+      <div>
+        <p class="location">{{ locationName() }}</p>
+        <h2>{{ result.totalScore }}/10</h2>
+        <p class="label">{{ result.label }}</p>
+      </div>
+
+      <div class="breakdown">
+        <div>
+          <span>Wind</span>
+          <strong>{{ result.windScore | number: '1.1-1' }}</strong>
+        </div>
+
+        <div>
+          <span>Rain</span>
+          <strong>{{ result.precipitationScore | number: '1.1-1' }}</strong>
+        </div>
+
+        <div>
+          <span>Mud</span>
+          <strong>{{ result.mudScore | number: '1.1-1' }}</strong>
+        </div>
+
+        <div>
+          <span>Temp</span>
+          <strong>{{ result.temperatureScore | number: '1.1-1' }}</strong>
+        </div>
+
+        <div>
+          <span>Visibility</span>
+          <strong>{{ result.visibilityScore | number: '1.1-1' }}</strong>
+        </div>
+
+        <div>
+          <span>Humidity</span>
+          <strong>{{ result.humidityScore | number: '1.1-1' }}</strong>
+        </div>
+      </div>
+
+      <ul class="notes">
+        @for (note of result.notes; track note) {
+          <li>{{ note }}</li>
+        }
+      </ul>
+    </article>
+  }
+</section>
